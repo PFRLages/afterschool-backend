@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "After school web app backend",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,13 +16,13 @@
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-  "url": "https://github.com/PFRLages/afterschool-backend/issues"
+    "url": "https://github.com/PFRLages/afterschool-backend/issues"
   },
   "homepage": "https://github.com/PFRLages/afterschool-backend#readme",
   "dependencies": {
     "cors": "^2.8.6",
-    "express": "^4.18.2",
-    "mongodb": "^4.12.1",
-    "properties-reader": "^3.0.1"
+    "express": "^4.22.2",
+    "mongodb": "^4.17.2",
+    "properties-reader": "^2.3.0"
   }
 }
