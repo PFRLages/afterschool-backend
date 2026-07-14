@@ -64,6 +64,58 @@ async function connectDB() {
 }
 connectDB().catch(console.error);
 
+// ---------- REST API routes ----------
+
+// GET /lessons
+// Returns all lessons from the database as a JSON array
+app.get("/lessons", async function (req, res) {
+    try {
+        const lessons = await db.collection("lesson").find({}).toArray();
+        res.json(lessons);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch lessons" });
+    }
+});
+
+// POST /orders
+// Saves a new order to the database.
+// Expected body: { name, phone, lessonIDs: [...], spaces }
+app.post("/orders", async function (req, res) {
+    try {
+        const order = req.body;
+
+        // Basic validation: an order must have a name, phone and at least one lesson
+        if (!order.name || !order.phone || !order.lessonIDs || order.lessonIDs.length === 0) {
+            return res.status(400).json({ error: "Order must include name, phone and lessonIDs" });
+        }
+
+        const result = await db.collection("order").insertOne(order);
+        res.status(201).json({ message: "Order created", orderId: result.insertedId });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to create order" });
+    }
+});
+
+// PUT /lessons/:id
+// Updates any attribute(s) of a lesson identified by its id.
+// The request body contains the fields to update, e.g. { "space": 3 }
+app.put("/lessons/:id", async function (req, res) {
+    try {
+        const lessonId = new ObjectId(req.params.id);
+        const result = await db.collection("lesson").updateOne(
+            { _id: lessonId },
+            { $set: req.body }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: "Lesson not found" });
+        }
+        res.json({ message: "Lesson updated" });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to update lesson" });
+    }
+});
+
 // Simple root route to confirm the server is running
 app.get("/", function (req, res) {
     res.send("After School API is running. Try GET /lessons");
