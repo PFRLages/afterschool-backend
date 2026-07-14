@@ -116,6 +116,31 @@ app.put("/lessons/:id", async function (req, res) {
     }
 });
 
+// GET /search?q=term
+// Performs a full-text search over the lessons.
+// Matches the query against topic, location, price and space (case-insensitive).
+app.get("/search", async function (req, res) {
+    try {
+        // The search term sent by the client, e.g. /search?q=london
+        const query = (req.query.q || "").toLowerCase();
+
+        // Fetch all lessons, then keep only those where any field contains the term
+        const lessons = await db.collection("lesson").find({}).toArray();
+        const results = lessons.filter(function (lesson) {
+            return (
+                lesson.topic.toLowerCase().includes(query) ||
+                lesson.location.toLowerCase().includes(query) ||
+                lesson.price.toString().includes(query) ||
+                lesson.space.toString().includes(query)
+            );
+        });
+
+        res.json(results);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to search lessons" });
+    }
+});
+
 // Simple root route to confirm the server is running
 app.get("/", function (req, res) {
     res.send("After School API is running. Try GET /lessons");
