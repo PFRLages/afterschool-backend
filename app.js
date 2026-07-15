@@ -40,15 +40,29 @@ app.use("/images", function (req, res) {
     });
 });
 
-// ---------- MongoDB Atlas connection ----------
-// Read the connection details from the properties file
-const properties = propertiesReader(path.join(__dirname, "conf/db.properties"));
-const dbUser = properties.get("db.user");
-const dbPwd = encodeURIComponent(properties.get("db.pwd"));
-const dbName = properties.get("db.dbName");
-const dbUrl = properties.get("db.dbUrl");
-const dbHost = properties.get("db.dbHost");
-const dbParams = properties.get("db.params");
+// ---------- Database configuration ----------
+// In deployment the connection details come from environment variables.
+// For local development they are read from conf/db.properties instead.
+let dbUser, dbPwd, dbName, dbUrl, dbHost, dbParams;
+
+if (process.env.DB_USER) {
+    // Deployment: read from environment variables
+    dbUser = process.env.DB_USER;
+    dbPwd = encodeURIComponent(process.env.DB_PWD);
+    dbName = process.env.DB_NAME;
+    dbUrl = process.env.DB_URL;
+    dbHost = process.env.DB_HOST;
+    dbParams = process.env.DB_PARAMS;
+} else {
+    // Local development: read from the properties file
+    const properties = propertiesReader(path.join(__dirname, "conf/db.properties"));
+    dbUser = properties.get("db.user");
+    dbPwd = encodeURIComponent(properties.get("db.pwd"));
+    dbName = properties.get("db.dbName");
+    dbUrl = properties.get("db.dbUrl");
+    dbHost = properties.get("db.dbHost");
+    dbParams = properties.get("db.params");
+}
 
 // Build the full connection string
 const uri = dbUrl + "://" + dbUser + ":" + dbPwd + "@" + dbHost + "/" + dbParams;
