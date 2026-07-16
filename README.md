@@ -20,3 +20,9 @@ REST API for the After School Classes booking app, built with **Node.js**, **Exp
 2. Create `conf/db.properties` with your MongoDB Atlas credentials
    (`db.user`, `db.pwd`, `db.dbName`, `db.dbUrl`, `db.dbHost`, `db.params`)
 3. Run `npm start` — the server listens on port 3000
+
+## Links
+- **Frontend GitHub repository:** https://github.com/PFRLages/afterschool-frontend
+- **Live app (GitHub Pages):** https://pfrlages.github.io/afterschool-frontend/
+- **Backend GitHub repository:** https://github.com/PFRLages/afterschool-backend
+- **Live API — all lessons (Render):** https://afterschool-backend-5ud5.onrender.com/lessons
